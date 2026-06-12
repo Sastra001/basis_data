@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Analysis Dashboard</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <h1>Stock Analysis Dashboard</h1>
+  <p class="subtitle">Data: Bitcoin & Forex (2007–2026) — Metode: Besson Rank & Distance Score</p>
+
+  <div id="loading" class="loading">Memuat data...</div>
+
+  <div id="app" class="hidden">
+
+    <!-- ── TABS ── -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('fitur1')">Analisis Saham</button>
+      <button class="tab"        onclick="switchTab('fitur2')">Perbandingan & Ranking</button>
+    </div>
+
+    <!-- ════════════════════════════════════
+         FITUR 1 — Analisis Saham
+    ════════════════════════════════════ -->
+    <div class="panel active" id="fitur1">
+
+      <!-- Input -->
+      <div class="card">
+        <p class="section-title">Input Data</p>
+        <div class="form-row">
+          <div>
+            <label>Nama Aset / Saham</label>
+            <select id="f1-asset">
+              <option value="bitcoin">Bitcoin (BTC)</option>
+              <option value="forex">Forex</option>
+            </select>
+          </div>
+          <div>
+            <label>Tahun</label>
+            <select id="f1-year"></select>
+          </div>
+        </div>
+        <button class="btn btn-full" onclick="analyzeStock()">Lihat Hasil</button>
+      </div>
+
+      <!-- Hasil -->
+      <div class="card hidden" id="f1-result">
+        <p class="section-title" id="f1-title"></p>
+
+        <!-- Metrik -->
+        <div class="result-grid" id="f1-metrics"></div>
+
+        <hr>
+
+        <!-- Bar Kriteria -->
+        <p class="section-hint">Nilai kriteria Besson Rank</p>
+        <div id="f1-bars"></div>
+
+        <hr>
+
+        <!-- Distance Score Chips -->
+        <p class="section-hint">Distance Score per kriteria</p>
+        <div class="ds-row" id="f1-ds"></div>
+      </div>
+
+    </div><!-- /fitur1 -->
+
+    <!-- ════════════════════════════════════
+         FITUR 2 — Perbandingan & Ranking
+    ════════════════════════════════════ -->
+    <div class="panel" id="fitur2">
+
+      <!-- Input Item -->
+      <div class="card">
+        <p class="section-title">Tambah Item Perbandingan</p>
+        <p class="section-hint">Maksimal 5 item. Bisa kombinasi aset berbeda atau tahun berbeda.</p>
+
+        <div class="item-list" id="item-list"></div>
+
+        <div class="f2-controls">
+          <button class="btn"        onclick="addItem()">+ Tambah Item</button>
+          <button class="btn btn-danger" onclick="resetItems()">Reset</button>
+          <button class="btn btn-full"   onclick="runCompare()" style="margin-top:4px">Bandingkan</button>
+        </div>
+      </div>
+
+      <!-- Hasil -->
+      <div class="card hidden" id="f2-result">
+
+        <!-- Line Chart -->
+        <p class="section-title">Grafik Pertumbuhan</p>
+        <p class="section-hint">Pertumbuhan tahunan (%) — titik tebal menandai tahun yang dipilih</p>
+        <div class="chart-wrap">
+          <canvas id="f2-chart"></canvas>
+        </div>
+        <div class="legend" id="f2-legend"></div>
+
+        <hr>
+
+        <!-- Ranking Table -->
+        <p class="section-title">Ranking Otomatis</p>
+        <p class="section-hint">Diurutkan dari Total Distance Score terkecil (terbaik)</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Aset</th>
+              <th>Tahun</th>
+              <th>Pertumbuhan</th>
+              <th>Total D.Score</th>
+              <th>C1 Rank</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="f2-rank-body"></tbody>
+        </table>
+
+      </div><!-- /f2-result -->
+
+    </div><!-- /fitur2 -->
+
+  </div><!-- /app -->
+
+  <!-- ── SCRIPTS ── -->
+  <!-- Urutan penting: data → chart lib → chart → fitur → main -->
+  <script src="assets/js/data.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="assets/js/chart.js"></script>
+  <script src="assets/js/fitur1.js"></script>
+  <script src="assets/js/fitur2.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>
