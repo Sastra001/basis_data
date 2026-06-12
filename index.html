@@ -74,13 +74,13 @@
 
       <!-- Input Item -->
       <div class="card">
-        <p class="section-title">Tambah Item Perbandingan</p>
-        <p class="section-hint">Maksimal 5 item. Bisa kombinasi aset berbeda atau tahun berbeda.</p>
+        <p class="section-title">Perbandingan</p>
+        <p class="section-hint">Maksimal 5.</p>
 
         <div class="item-list" id="item-list"></div>
 
         <div class="f2-controls">
-          <button class="btn"        onclick="addItem()">+ Tambah Item</button>
+          <button class="btn"        onclick="addItem()">Tambah data</button>
           <button class="btn btn-danger" onclick="resetItems()">Reset</button>
           <button class="btn btn-full"   onclick="runCompare()" style="margin-top:4px">Bandingkan</button>
         </div>
@@ -91,7 +91,6 @@
 
         <!-- Line Chart -->
         <p class="section-title">Grafik Pertumbuhan</p>
-        <p class="section-hint">Pertumbuhan tahunan (%) — titik tebal menandai tahun yang dipilih</p>
         <div class="chart-wrap">
           <canvas id="f2-chart"></canvas>
         </div>
@@ -110,7 +109,7 @@
               <th>Tahun</th>
               <th>Pertumbuhan</th>
               <th>Total D.Score</th>
-              <th>C1 Rank</th>
+              <th>Rank</th>
               <th>Status</th>
             </tr>
           </thead>
