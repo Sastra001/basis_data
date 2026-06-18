@@ -5,22 +5,10 @@
 
 /**
  * Inisialisasi dashboard:
- * - Isi dropdown tahun untuk fitur 1
  * - Tambah 2 item default untuk fitur 2
  * - Tampilkan app, sembunyikan loading
  */
 function init() {
-  const years = [...DATASET.meta.years].reverse();
-
-  // Isi dropdown fitur 1
-  const f1Year = document.getElementById('f1-year');
-  years.forEach(y => {
-    const o = document.createElement('option');
-    o.value = y;
-    o.textContent = y;
-    f1Year.appendChild(o);
-  });
-
   // Default 2 item fitur 2
   addItem('bitcoin', '2020');
   addItem('forex',   '2020');
