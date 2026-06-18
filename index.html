@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Basis-data</title>
+  <title>Stock Analysis Dashboard</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <h1>Perbandingan aset saham dari tahun ke tahun</h1>
-  <p class="subtitle">Metode: Besson Rank & Distance Score</p>
+  <h1>Stock Analysis Dashboard</h1>
+  <p class="subtitle">Data: Bitcoin & Forex (2007–2026) — Metode: Besson Rank & Distance Score</p>
 
   <div id="loading" class="loading">Memuat data...</div>
 
@@ -22,50 +22,125 @@
     </div>
 
     <!-- ════════════════════════════════════
-         FITUR 1 — Analisis Saham
+         FITUR 1 — Pertumbuhan Aset Per Tahun
     ════════════════════════════════════ -->
     <div class="panel active" id="fitur1">
 
       <!-- Input -->
       <div class="card">
-        <p class="section-title">Input Data</p>
-        <div class="form-row">
-          <div>
-            <label>Nama Aset / Saham</label>
-            <select id="f1-asset">
-              <option value="bitcoin">Bitcoin</option>
-              <option value="forex">Forex</option>
-            </select>
-          </div>
-          <div>
-            <label>Tahun</label>
-            <select id="f1-year"></select>
-          </div>
+        <p class="section-title">Pilih Aset</p>
+        <div style="margin-bottom: 1rem;">
+          <label>Nama Aset / Saham</label>
+          <select id="f1-asset">
+            <option value="bitcoin">Bitcoin (BTC)</option>
+            <option value="forex">Forex</option>
+          </select>
         </div>
-        <button class="btn btn-full" onclick="analyzeStock()">Lihat Hasil</button>
+        <button class="btn btn-full" onclick="showAssetChart()">Tampilkan</button>
       </div>
 
       <!-- Hasil -->
       <div class="card hidden" id="f1-result">
-        <p class="section-title" id="f1-title"></p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <p class="section-title" id="f1-title" style="margin-bottom: 0;"></p>
+          <button class="btn btn-indicator" onclick="toggleIndicatorMenu()">
+            🔌 Indikator <span id="indicator-arrow">▼</span>
+          </button>
+        </div>
 
-        <!-- Metrik -->
-        <div class="result-grid" id="f1-metrics"></div>
+        <!-- Indicator Menu (hidden by default) -->
+        <div id="f1-indicator-menu" class="indicator-menu hidden">
+          <div class="indicator-menu-item" onclick="openModal('ma')">
+            Rata-rata Pergerakan
+          </div>
+          <div class="indicator-menu-item" onclick="openModal('macd')">
+            Rata-rata Pergerakan Konvergen/Divergen
+          </div>
+          <div class="indicator-menu-item" onclick="openModal('envelope')">
+            Garis Envelope Pergerakan Rata-rata
+          </div>
+        </div>
 
-        <hr>
+        <!-- Indicator Badges -->
+        <div id="f1-badges" class="indicator-badges" style="margin-bottom: 1rem;"></div>
 
-        <!-- Bar Kriteria -->
-        <p class="section-hint">Nilai kriteria Besson Rank</p>
-        <div id="f1-bars"></div>
-
-        <hr>
-
-        <!-- Distance Score Chips -->
-        <p class="section-hint">Distance Score per kriteria</p>
-        <div class="ds-row" id="f1-ds"></div>
+        <p class="section-hint">Pertumbuhan tahunan (%) dari 2007 hingga 2026</p>
+        <div class="chart-wrap">
+          <canvas id="f1-chart"></canvas>
+        </div>
       </div>
 
     </div><!-- /fitur1 -->
+
+    <!-- ════════════════════════════════════
+         MODALS
+    ════════════════════════════════════ -->
+
+    <!-- Modal MA -->
+    <div id="modal-ma" class="modal hidden">
+      <div class="modal-overlay" onclick="closeModal('ma')"></div>
+      <div class="modal-content">
+        <p class="modal-title">Rata-rata Pergerakan Sederhana</p>
+        <div class="modal-body">
+          <div>
+            <label>Periode</label>
+            <select id="ma-periode-input"></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('ma')">Batal</button>
+          <button class="btn" onclick="applyIndicator('ma')">Selesai</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal MACD -->
+    <div id="modal-macd" class="modal hidden">
+      <div class="modal-overlay" onclick="closeModal('macd')"></div>
+      <div class="modal-content">
+        <p class="modal-title">Rata-rata Pergerakan Konvergen/Divergen</p>
+        <div class="modal-body">
+          <div>
+            <label>Periode Pendek</label>
+            <select id="macd-fast-input"></select>
+          </div>
+          <div>
+            <label>Periode Panjang</label>
+            <select id="macd-slow-input"></select>
+          </div>
+          <div>
+            <label>Periode Sinyal</label>
+            <select id="macd-signal-input"></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('macd')">Batal</button>
+          <button class="btn" onclick="applyIndicator('macd')">Selesai</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Envelope -->
+    <div id="modal-envelope" class="modal hidden">
+      <div class="modal-overlay" onclick="closeModal('envelope')"></div>
+      <div class="modal-content">
+        <p class="modal-title">Garis Envelope Pergerakan Rata-rata</p>
+        <div class="modal-body">
+          <div>
+            <label>Periode</label>
+            <select id="envelope-periode-input"></select>
+          </div>
+          <div>
+            <label>Persentase</label>
+            <select id="envelope-percentage-input"></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('envelope')">Batal</button>
+          <button class="btn" onclick="applyIndicator('envelope')">Selesai</button>
+        </div>
+      </div>
+    </div>
 
     <!-- ════════════════════════════════════
          FITUR 2 — Perbandingan & Ranking
@@ -74,13 +149,13 @@
 
       <!-- Input Item -->
       <div class="card">
-        <p class="section-title">Perbandingan</p>
-        <p class="section-hint">Maksimal 5.</p>
+        <p class="section-title">Tambah Item Perbandingan</p>
+        <p class="section-hint">Maksimal 5 item. Bisa kombinasi aset berbeda atau tahun berbeda.</p>
 
         <div class="item-list" id="item-list"></div>
 
         <div class="f2-controls">
-          <button class="btn"        onclick="addItem()">Tambah data</button>
+          <button class="btn"        onclick="addItem()">+ Tambah Item</button>
           <button class="btn btn-danger" onclick="resetItems()">Reset</button>
           <button class="btn btn-full"   onclick="runCompare()" style="margin-top:4px">Bandingkan</button>
         </div>
@@ -91,6 +166,7 @@
 
         <!-- Line Chart -->
         <p class="section-title">Grafik Pertumbuhan</p>
+        <p class="section-hint">Pertumbuhan tahunan (%) — titik tebal menandai tahun yang dipilih</p>
         <div class="chart-wrap">
           <canvas id="f2-chart"></canvas>
         </div>
@@ -109,7 +185,7 @@
               <th>Tahun</th>
               <th>Pertumbuhan</th>
               <th>Total D.Score</th>
-              <th>Rank</th>
+              <th>C1 Rank</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -123,8 +199,9 @@
   </div><!-- /app -->
 
   <!-- ── SCRIPTS ── -->
-  <!-- Urutan penting: data → chart lib → chart → fitur → main -->
+  <!-- Urutan penting: data → indicators → chart lib → chart → fitur → main -->
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/indicators.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="assets/js/chart.js"></script>
   <script src="assets/js/fitur1.js"></script>
