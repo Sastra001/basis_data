@@ -65,8 +65,20 @@
         <div id="f1-badges" class="indicator-badges" style="margin-bottom: 1rem;"></div>
 
         <p class="section-hint">Pertumbuhan tahunan (%) dari 2007 hingga 2026</p>
-        <div class="chart-wrap">
-          <canvas id="f1-chart"></canvas>
+        
+        <div style="display: flex; gap: 1rem;">
+          <!-- Sidebar Daftar (Left) -->
+          <div class="sidebar-daftar" id="sidebar-daftar">
+            <p class="sidebar-title">Daftar</p>
+            <div id="f1-sidebar-items"></div>
+          </div>
+
+          <!-- Main Chart (Right) -->
+          <div style="flex: 1;">
+            <div class="chart-wrap">
+              <canvas id="f1-chart"></canvas>
+            </div>
+          </div>
         </div>
       </div>
 
